@@ -47,7 +47,7 @@ public class MemberService {
 			memberRepo.save(member);
 		}
 	}
-
+	
 
 
 }
