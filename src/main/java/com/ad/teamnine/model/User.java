@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
-public abstract class User {
+public  abstract class User {
 	@Id
 	private Integer id;
 	@Column
