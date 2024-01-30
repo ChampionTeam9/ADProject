@@ -11,8 +11,8 @@ public class MainController {
 		this.csvService = csvService;
 	}
 	@RequestMapping("/")
-	public String home() {
-		return "page1";
+	public String homePage() {
+		return "HomePage";
 		
 	}
 	@RequestMapping("/read")
