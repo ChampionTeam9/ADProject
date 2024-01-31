@@ -26,6 +26,8 @@ public class Ingredient {
 	private Double saturatedFat;
 	@ManyToMany
 	private List<Recipe> recipes;
+	@OneToMany(mappedBy = "ingredient")
+	private List<ShoppingListItem> shoppingListItems;
 	
 	public Ingredient() {}
 	
@@ -101,5 +103,10 @@ public class Ingredient {
 	}
 	public void setRecipes(List<Recipe> recipes) {
 		this.recipes = recipes;
+	}
+	
+	@Override
+	public String toString() {
+		return foodText + " (" + id + ") " + protein + ", " + calories + ", " + carbohydrate + ", " + sugar + ", " + sodium + ", " + fat + ", " + saturatedFat;
 	}
 }

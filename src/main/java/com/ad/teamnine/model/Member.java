@@ -20,8 +20,9 @@ public class Member extends User{
 	private String gender;
 	@Column
 	private Double calorieIntake;
-	@ElementCollection
-	private List<Ingredient> shoppingList;
+	
+	@OneToMany(mappedBy = "member")
+	private List<ShoppingListItem> shoppingList;
 	
 	@OneToMany(mappedBy = "member")
 	private List<Recipe> savedRecipes;
@@ -102,11 +103,11 @@ public class Member extends User{
 		this.calorieIntake = calorieIntake;
 	}
 
-	public List<Ingredient> getShoppingList() {
+	public List<ShoppingListItem> getShoppingList() {
 		return shoppingList;
 	}
 
-	public void setShoppingList(List<Ingredient> shoppingList) {
+	public void setShoppingList(List<ShoppingListItem> shoppingList) {
 		this.shoppingList = shoppingList;
 	}
 

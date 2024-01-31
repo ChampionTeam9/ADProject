@@ -1,12 +1,16 @@
 package com.ad.teamnine.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.ad.teamnine.model.Admin;
 import com.ad.teamnine.model.Member;
+import com.ad.teamnine.model.Recipe;
 import com.ad.teamnine.model.User;
+import com.ad.teamnine.repository.MemberRepository;
 import com.ad.teamnine.repository.UserRepository;
 import jakarta.transaction.Transactional;
 
@@ -15,6 +19,9 @@ import jakarta.transaction.Transactional;
 public class UserService {
 	@Autowired
 	UserRepository userRepo;
+	
+	@Autowired
+	MemberRepository memberRepo;
 
 	// check for login
 	public boolean login(User user) {
@@ -46,6 +53,5 @@ public class UserService {
 			System.out.println("Account with ID " + id + " does not exist");
 		}
 	}
-	
 	
 }
