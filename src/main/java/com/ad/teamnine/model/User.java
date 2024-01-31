@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
+@Table(name="Users")
 public abstract class User {
 	@Id
 	private Integer id;
@@ -16,6 +17,14 @@ public abstract class User {
 			+ "password must have at least one number," + "password must have at least one letter,"
 			+ "password must have at least one punctuation.")
 	private String password;
+	
+	public User() {}
+	
+	public User(int id, String username, String password) {
+		this.id = id;
+		this.username = username;
+		this.password = password;
+	}
 
 	// getter and setter
 	public Integer getId() {

@@ -1,6 +1,7 @@
 package com.ad.teamnine.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -36,6 +37,22 @@ public class Member extends User{
 	
 	@OneToMany(mappedBy = "memberReported")
 	private List<MemberReport> reportsToMember;
+	
+	public Member() {}
+	
+	public Member(int id, String username, String password, double height, double weight, LocalDate birthdate, String gender) {
+		super(id, username, password);
+		this.height = height;
+		this.weight = weight;
+		this.birthdate = birthdate;
+		this.gender = gender;
+		shoppingList = new ArrayList<>();
+		savedRecipes = new ArrayList<>();
+		addedRecipes = new ArrayList<>();
+		reviews = new ArrayList<>();
+		reports = new ArrayList<>();
+		reportsToMember = new ArrayList<>();
+	}
 
 	public Double getHeight() {
 		return height;

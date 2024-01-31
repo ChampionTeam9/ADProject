@@ -1,5 +1,6 @@
 package com.ad.teamnine.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -67,6 +68,18 @@ public class Recipe {
 	
 	@ManyToOne
 	private Member member;
+	
+	public Recipe() {}
+	
+	public Recipe(int id, String name, String description, Member member) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		ingredients = new ArrayList<>();
+		reviews = new ArrayList<>();
+		recipesToReport = new ArrayList<>();
+		this.member = member;
+	}
 	
 	// getter and setter
 	public Integer getId() {
