@@ -22,6 +22,12 @@ public class IngredientService {
 		return ingredient.orElse(null);
 	};
 	
+	// get specific ingredient by foodText
+	public Ingredient getIngredientByfoodText(String foodText) {
+		Optional<Ingredient> ingredient = ingredientRepo.findByfoodText(foodText);
+		return ingredient.orElse(null);
+	};
+	
 	// save ingredient
 	public Ingredient saveIngredient(Ingredient ingredient) {
 		return ingredientRepo.save(ingredient);

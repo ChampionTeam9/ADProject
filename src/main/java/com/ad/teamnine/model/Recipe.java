@@ -76,6 +76,7 @@ public class Recipe {
 		this.name = name;
 		this.description = description;
 		ingredients = new ArrayList<>();
+		tags = new ArrayList<>();
 		reviews = new ArrayList<>();
 		recipesToReport = new ArrayList<>();
 		this.member = member;

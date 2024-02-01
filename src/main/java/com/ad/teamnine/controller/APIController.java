@@ -79,15 +79,21 @@ public class APIController {
 			}
 			//Create recipe ingredients
 			String ingredientsString = currRecipe[12];
-			String[] ingredientsArr = extractItems(ingredientsString);
+			String[] ingredientsArr = extractIngredients(ingredientsString);
 			List<Ingredient> ingredientsToAdd = new ArrayList<>();
 			for (String ingredientText : ingredientsArr) {
 				if (ingredientText.isEmpty())
 					continue;
-				Ingredient ingredient = new Ingredient();
-				ingredient.setFoodText(ingredientText);
-				Ingredient savedIngredient = ingredientService.saveIngredient(ingredient);
-				ingredientsToAdd.add(savedIngredient);
+				Ingredient existingIngredient = ingredientService.getIngredientByfoodText(ingredientText);
+				if (existingIngredient != null) {
+					ingredientsToAdd.add(existingIngredient);
+				}
+				else {
+					Ingredient ingredient = new Ingredient();
+					ingredient.setFoodText(ingredientText);
+					Ingredient savedIngredient = ingredientService.saveIngredient(ingredient);
+					ingredientsToAdd.add(savedIngredient);
+				}
 			}
 			//Create recipe
 			int recipeId = Integer.parseInt(currRecipe[1]);
@@ -104,18 +110,37 @@ public class APIController {
 			double sodium = Double.parseDouble(currRecipe[21]);
 			double fat = Double.parseDouble(currRecipe[19]);
 			double saturatedFat = Double.parseDouble(currRecipe[23]);
-			List<String> steps = Arrays.asList(extractItems(currRecipe[8]));
+			List<String> steps = Arrays.asList(extractSteps(currRecipe[8]));
 			Recipe recipe = new Recipe(recipeId, recipeName, recipeDescription, recipeRating, preparationTime, 
 					servings, numberOfSteps, member, calories, protein, carbohydrate, sugar, sodium, fat, saturatedFat, steps);
 			recipeService.createRecipe(recipe);
+			//Save recipes to ingredients
+			for (Ingredient ingredient : ingredientsToAdd) {
+				ingredient.getRecipes().add(recipe);
+				ingredientService.saveIngredient(ingredient);
+			}
 		}
 	}
 	
-	public String[] extractItems(String itemsString) {
-		// Remove square brackets and quotes from the input string
-        String cleanedString = itemsString.replaceAll("[\\[\\]\"]", "");
-        // Split the string based on the comma outside of parentheses
-        String[] itemsArr = cleanedString.split(",(?![^()]*\\))");
-        return itemsArr;
+	public String[] extractIngredients(String ingredientsString) {
+        // Split the string based on commas within double quotes
+        String[] ingredientsArr = ingredientsString.substring(1, ingredientsString.length() - 1).split("\",\"");
+        for (int i = 0; i < ingredientsArr.length; i++) {
+        	ingredientsArr[i] = ingredientsArr[i].trim();
+        	ingredientsArr[i] = ingredientsArr[i].replaceAll("\\s+", " ");
+        	ingredientsArr[i] = ingredientsArr[i].replaceAll("\"", "");
+        }
+        return ingredientsArr;
+    }
+	
+	public static String[] extractSteps(String stepsString) {
+        // Split the string based on commas followed by a space outside single quotes
+        String[] stepsArr = stepsString.substring(1, stepsString.length() - 1).split("', '");
+        // Remove surrounding single quotes from each step
+        for (int i = 0; i < stepsArr.length; i++) {
+            stepsArr[i] = stepsArr[i].replaceAll("'", "");
+            stepsArr[i] = stepsArr[i].replaceAll("\"", "");
+        }
+        return stepsArr;
     }
 }

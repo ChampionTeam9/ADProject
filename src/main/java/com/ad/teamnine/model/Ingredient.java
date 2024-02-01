@@ -30,7 +30,9 @@ public class Ingredient {
 	@OneToMany(mappedBy = "ingredient")
 	private List<ShoppingListItem> shoppingListItems;
 	
-	public Ingredient() {}
+	public Ingredient() {
+		recipes = new ArrayList<>();
+	}
 	
 	public Ingredient(int id, String foodText, double protein, double calories, double carbohydrate, double sugar, double sodium, double fat, double saturatedFat) {
 		this.id = id;
