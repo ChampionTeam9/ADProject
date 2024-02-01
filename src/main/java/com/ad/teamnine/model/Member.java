@@ -1,6 +1,7 @@
 package com.ad.teamnine.model;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,9 @@ public class Member extends User{
 		this.height = height;
 		this.weight = weight;
 		this.birthdate = birthdate;
+		this.age = calculateAge();
 		this.gender = gender;
+		this.calorieIntake = calculateCalorieIntake();
 		shoppingList = new ArrayList<>();
 		savedRecipes = new ArrayList<>();
 		addedRecipes = new ArrayList<>();
@@ -151,4 +154,20 @@ public class Member extends User{
 		this.reportsToMember = reportsToMember;
 	}
 	
+	public int calculateAge() {
+		LocalDate curDate = LocalDate.now();
+		return Period.between(birthdate, curDate).getYears();
+	}
+	
+	public Double calculateCalorieIntake() {
+		//Using Harris-Benedict formula to calculate Basal Metabolic Rate
+		Double BMR = 0.0;
+		if (gender.equals("Male")) {
+			BMR = 66 + (13.7 * weight) + (5 * height) - (6.8 * age);
+		}
+		else {
+			BMR = 655 + (9.6 * weight) + (1.8 * height) - (4.7 * age);
+		}
+		return BMR;
+	}
 }

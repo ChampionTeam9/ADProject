@@ -1,7 +1,6 @@
 package com.ad.teamnine;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -11,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import com.ad.teamnine.model.Ingredient;
 import com.ad.teamnine.model.Member;
 import com.ad.teamnine.model.Recipe;
-import com.ad.teamnine.model.ShoppingListItem;
 import com.ad.teamnine.repository.IngredientRepository;
 import com.ad.teamnine.repository.MemberRepository;
 import com.ad.teamnine.repository.RecipeRepository;

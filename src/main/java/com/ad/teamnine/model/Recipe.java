@@ -19,7 +19,7 @@ public class Recipe {
 	private Integer id;
 	@Column
 	private String name;
-	@Column
+	@Column(length = 500)
 	private String description;
 	@Column
 	private Double rating;
@@ -52,7 +52,7 @@ public class Recipe {
 	@Column
 	private Double fat;
 	@Column
-	private Double saturateFat;
+	private Double saturatedFat;
 	@ElementCollection
 	private List<String> steps;
 	
@@ -79,6 +79,27 @@ public class Recipe {
 		reviews = new ArrayList<>();
 		recipesToReport = new ArrayList<>();
 		this.member = member;
+	}
+	
+	public Recipe(int id, String name, String description, double rating, int preparationTime, 
+			int servings, int numberOfSteps, Member member, double calories, double protein, 
+			double carbohydrate, double sugar, double sodium, double fat, double saturatedFat, List<String> steps) {
+		this(id, name, description, member);
+		this.rating = rating;
+		this.numberOfSaved = 0;
+		this.preparationTime = preparationTime;
+		this.servings = servings;
+		this.numberOfSteps = numberOfSteps;
+		this.calories = calories;
+		this.protein = protein;
+		this.carbohydrate = carbohydrate;
+		this.sugar = sugar;
+		this.sodium = sodium;
+		this.fat = fat;
+		this.saturatedFat = saturatedFat;
+		this.steps = steps;
+		this.healthScore = calculateHealthScore();
+		this.status = Status.Public;
 	}
 	
 	// getter and setter
@@ -222,10 +243,27 @@ public class Recipe {
 	public void setFat(Double fat) {
 		this.fat = fat;
 	}
-	public Double getSaturateFat() {
-		return saturateFat;
+	public Double getSaturatedFat() {
+		return saturatedFat;
 	}
-	public void setSaturateFat(Double saturateFat) {
-		this.saturateFat = saturateFat;
+	public void setSaturatedFat(Double saturatedFat) {
+		this.saturatedFat = saturatedFat;
+	}
+	
+	public int calculateHealthScore() {
+		healthScore = 0;
+		if (protein >= 10 && protein <= 15)
+			healthScore ++;
+		if (carbohydrate >=55 && carbohydrate <= 75)
+			healthScore ++;
+		if (sugar < 10)
+			healthScore ++;
+		if (sodium < 33)
+			healthScore ++;
+		if (fat >= 15 && fat <=30)
+			healthScore ++;
+		if (saturatedFat < 10)
+			healthScore ++;
+		return healthScore;
 	}
 }

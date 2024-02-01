@@ -21,4 +21,9 @@ public class IngredientService {
 		Optional<Ingredient> ingredient = ingredientRepo.findById(id);
 		return ingredient.orElse(null);
 	};
+	
+	// save ingredient
+	public Ingredient saveIngredient(Ingredient ingredient) {
+		return ingredientRepo.save(ingredient);
+	}
 }
