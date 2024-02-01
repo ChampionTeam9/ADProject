@@ -21,7 +21,7 @@ public class Member extends User{
 	@Column
 	private Double calorieIntake;
 	
-	@OneToMany(mappedBy = "member")
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ShoppingListItem> shoppingList;
 	
 	@OneToMany(mappedBy = "member")

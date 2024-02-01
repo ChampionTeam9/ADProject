@@ -1,7 +1,7 @@
 package com.ad.teamnine.controller;
 
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,6 +45,7 @@ public class UserController {
 	@Autowired
 	private ShoppingListItemService shoppingListItemService;
 	
+	//Show page for adding ingredients to shopping list
 	@GetMapping("/shoppingList/add")
 	public String addShoppingListIngredient(Model model) {
 		Recipe recipe = recipeService.getRecipeById(1);
@@ -56,6 +57,7 @@ public class UserController {
 		return "UserViews/addShoppingListIngredientPage";
 	}
 	
+	//Save the ingredients selected as ShoppingListItem
 	@PostMapping("/shoppingList/add")
 	public String addShoppingListIngredient(@ModelAttribute("addIngredientForm") 
 	@Valid AddIngredientForm addIngredientForm, BindingResult bindingResult, Model model, HttpSession sessionObj) {
@@ -80,6 +82,7 @@ public class UserController {
 		return "redirect:/user/shoppingList/view";
 	}
 	
+	//View the shopping list
 	@GetMapping("shoppingList/view")
 	public String viewShoppingListIngredient(Model model) {
 		//Get member's shopping list
@@ -102,8 +105,38 @@ public class UserController {
 		return ResponseEntity.ok().build();
 	}
 	
+	//Edit the shopping list
 	@GetMapping("shoppingList/edit")
-	public String editShoppingList() {
+	public String editShoppingList(Model model) {
+		//Get member's shopping list
+		//Member member = memberService.getMemberById((int)sessionObj.getAttribute("userId"));
+		//Hardcode first
+		Member member = memberService.getMemberById(1);
+		List<ShoppingListItem> shoppingList = member.getShoppingList();
+		model.addAttribute("shoppingList", shoppingList);
 		return "/UserViews/editShoppingListPage";
+	}
+	
+	//Clear off ShoppingListItems
+	@PostMapping("shoppingList/clearItems")
+	public ResponseEntity<Void> clearItems(@RequestBody Map<String, Object> payload) {
+		String message = (String) payload.get("message");
+		System.out.println(message);
+		//Get member's shopping list
+		//Member member = memberService.getMemberById((int)sessionObj.getAttribute("userId"));
+		//Hardcode first
+		Member member = memberService.getMemberById(1);
+		List<ShoppingListItem> shoppingList = member.getShoppingList();
+		//Use iterator to prevent ConcurrentModificationException
+		Iterator<ShoppingListItem> iterator = shoppingList.iterator();
+		while (iterator.hasNext()) {
+	        ShoppingListItem item = iterator.next();
+	        System.out.println(item.getIngredient());
+			if ((message.equals("clearChecked") && item.isChecked()) || message.equals("clearAll")) {
+				iterator.remove();
+				shoppingListItemService.deleteShoppingListItem(item);
+			}
+		}
+		return ResponseEntity.ok().build();
 	}
 }

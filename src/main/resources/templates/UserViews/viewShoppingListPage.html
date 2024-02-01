@@ -7,7 +7,6 @@
 		
 		<script>
 			document.addEventListener("DOMContentLoaded", function(event) {
-				console.log("Hello like that")
 				const checkboxes = document.getElementsByClassName('shoppingListItem')
 				console.log(checkboxes)
 				for (const checkbox of checkboxes) {
@@ -51,6 +50,6 @@
 				</td>
 			</tr>
 		</table>
-		<button type="button">Edit</button>
+		<button type="button" onclick="window.location.href='/user/shoppingList/edit';">Edit</button>
 	</body>
 </html>
