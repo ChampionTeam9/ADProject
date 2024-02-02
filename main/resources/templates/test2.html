@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tags</title>
+</head>
+<body>
+
+<h2>Selected Tags (From Session)</h2>
+<ul>
+    <!-- 这里显示session中的tags -->
+    <li th:each="tag : ${session.tags}">
+        <span th:text="${tag}"></span>
+    </li>
+</ul>
+
+<h2>New Tags (From Model)</h2>
+<ul>
+    <!-- 这里显示model中的tags -->
+    <li th:each="tag : ${newTags}">
+        <span th:text="${tag}"></span>
+    </li>
+</ul>
+
+</body>
+</html>
