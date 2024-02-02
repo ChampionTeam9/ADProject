@@ -24,6 +24,9 @@ public class AdProjectApplication {
 	@Bean
 	public CommandLineRunner commandLineRun(MemberRepository memberRepo, IngredientRepository ingrRepo, RecipeRepository recipeRepo) {
 		return args -> {
+			
+			System.out.println("CommandLineRunner started");
+			
 			LocalDate date1 = LocalDate.of(2000, 1, 8);
 			Member member1 = new Member(1, "member1Username", "member1Password!", 170, 65.3, date1, "Male");
 			memberRepo.save(member1);
@@ -43,6 +46,8 @@ public class AdProjectApplication {
 			ingredient2.getRecipes().add(recipe1);
 			ingrRepo.save(ingredient1);
 			ingrRepo.save(ingredient2);
+			
+			System.out.println("CommandLineRunner ended");
 		};
 	}
 }
