@@ -10,11 +10,13 @@ import com.ad.teamnine.model.Recipe;
 public interface RecipeRepository extends JpaRepository<Recipe,Integer>{
 	
 	@Query("SELECT DISTINCT r.tags FROM Recipe r")
-	static
-    List<String> findAllDistinctTags() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    List<String> findAllDistinctTags();
 	
+	@Query("SELECT r FROM Recipe r WHERE r.name LIKE %?1%")
+    List<Recipe> findByNameContaining(String name);
+	@Query("SELECT r FROM Recipe r JOIN r.tags t WHERE t LIKE %?1%")
+	List<Recipe> findByTagsContaining(String tag);
+	
+
 
 }

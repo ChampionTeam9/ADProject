@@ -12,6 +12,23 @@
     <h2>Update Recipe</h2>
     <form action="/recipe/edit" method="post">
 		<input type="hidden" id="idInput" name="id" th:value="${recipe.id}">
+		<input type="hidden" id="numberOfSavedInput" name="numberOfSaved" th:value="${recipe.numberOfSaved}">
+		<input type="hidden" id="numberOfStepsInput" name="numberOfSteps" th:value="${recipe.numberOfSteps}">
+		<input type="hidden" id="healthScoreInput" name="healthScore" th:value="${recipe.healthScore}">
+		<input type="hidden" id="notesInput" name="notes" th:value="${recipe.notes}">
+		<input type="hidden" id="caloriesInput" name="calories" th:value="${recipe.calories}">
+		<input type="hidden" id="proteinInput" name="protein" th:value="${recipe.protein}">
+		<input type="hidden" id="carbohydrateInput" name="carbohydrate" th:value="${recipe.carbohydrate}">
+		<input type="hidden" id="sugarInput" name="sugar" th:value="${recipe.sugar}">
+		<input type="hidden" id="sodiumInput" name="sodium" th:value="${recipe.sodium}">
+		<input type="hidden" id="fatInput" name="fat" th:value="${recipe.fat}">
+		<input type="hidden" id="saturateFatInput" name="saturateFat" th:value="${recipe.saturateFat}">
+		<input type="hidden" id="numberOfIngredientsInput" name="numberOfIngredients" th:value="${recipe.numberOfIngredients}">
+		<input type="hidden" id="numberOfReviewsInput" name="numberOfReviews" th:value="${recipe.numberOfReviews}">
+		<input type="hidden" id="ratingInput" name="rating" th:value="${recipe.rating}">
+		
+		
+		
         <label for="nameInput">Recipe Name:</label>
         <input type="text" id="nameInput" name="name" required th:value="${recipe.name}"> 
         <br>
@@ -39,8 +56,9 @@
         <label for="ingredientsInput">Ingredients:</label>
         <div id="ingredientsContainer">
             <div th:each="ingredient, status : ${recipe.ingredients}">
-        	<input type="text" name="ingredients" th:value="${ingredient}">
-        	<button type="button" th:attr="onclick='deleteIngredient(\'' + ${status.index} + '\')'">Delete</button>
+        	<input type="text" name="ingredients" th:value="${ingredient}"> 	
+        	<button type="button" onclick="removeRows(event)">Delete</button>
+
 
         	<br>
     		</div>
@@ -55,7 +73,7 @@
         <div id="stepsContainer">
             <div th:each="step, status : ${recipe.steps}">
         	<input type="text" name="steps" th:value="${step}">
-        	<button type="button" th:attr="onclick='deleteStep(\'' + ${status.index} + '\')'">Delete</button>
+        	<button type="button" onclick="removeRows(event)">Delete</button>
         	<br>
     		</div>
 
@@ -85,19 +103,19 @@
         <label for="tagsInput">Tags:</label>
         <div id="tagsContainer">
             <div th:each="tag, status : ${recipe.tags}">
-        	<input type="text" name="tags" th:value="${tag}">
-        	<button type="button" th:attr="onclick='deleteTag(\'' + ${status.index} + '\')'">Delete</button>
-
+        	<input type="text" name="tags" th:value="${tag}" readonly>
+        	<button type="button" onclick="removeRows(event)">Delete</button>
         	<br>
     		</div>
+    		
+    		<input type="text" id="newTagInput" oninput="getMatchingTags(this.value)">
+    		<div id="tagDropdown"></div>
 		   
         </div>
         
-        <!-- 按钮触发添加新指引框 -->
-        <button type="button" onclick="addTags()">Add tag</button>
-        <br>
         
         
+        <p th:text="${recipe.status}"></p>
         <label for="public">Public</label>
     	<input type="radio" id="public" name="status" value="Public" th:checked="${recipe.status == 'Public'}">
 
@@ -114,6 +132,8 @@
     <script>
         function addIngredient() {
         var container = document.getElementById("ingredientsContainer");
+        var ingredientRow = document.createElement("div");
+        
         var input = document.createElement("input");
         input.type = "text";
         input.name = "ingredients";
@@ -123,28 +143,58 @@
         var deleteButton = document.createElement("button");
         deleteButton.type = "button";
         deleteButton.textContent = "Delete";
-        // 使用匿名函数绑定点击事件，     传递当前元素（行）的引索
-        deleteButton.onclick = function() {
-            deleteRow(this.parentNode);
-        };
-
-        container.appendChild(input);
-        container.appendChild(deleteButton);
-        container.appendChild(document.createElement("br"));
-    }
-
-        function deleteIngredient(index) {
-        var container = document.getElementById("ingredientsContainer");
-        var rows = container.getElementsByTagName("div");
         
-        if (index >= 0 && index <= rows.length) {
-            container.removeChild(rows[index]);
-        }
+        // 删除
+        deleteButton.onclick = function() {
+			removeRow(ingredientRow,container);
+		};
+
+        ingredientRow.appendChild(input);
+        ingredientRow.appendChild(deleteButton);
+        container.appendChild(ingredientRow);
+       
+        
+        updateNumberOfIngredients();
     }
+    
+
+
+        function removeRows(event) {
+		    // 获取点击的按钮所在的父级div
+		    var ingredientDiv = event.target.parentNode;
+		
+		    // 从父级div的父级div（即ingredientsContainer）中移除当前行
+		    ingredientDiv.parentNode.removeChild(ingredientDiv);
+		    
+		    updateNumberOfIngredients();
+		    updateNumberOfSteps();
+		}
+
+		function removeRow(row,container) {
+		    
+		    container.removeChild(row);
+		    updateNumberOfIngredients();
+		    updateNumberOfSteps();
+		}
+
+
+    
+	    function updateNumberOfIngredients() {
+		    var container = document.getElementById("ingredientsContainer");
+		    var numberOfIngredientsInput = document.getElementById("numberOfIngredientsInput");
+		
+		    // 设置 numberOfSteps 的值为当前行数
+		    numberOfIngredientsInput.value = (container.getElementsByTagName("div").length);
+		}
+    
+    
+    
         
         
         function addstep() {
             var container = document.getElementById("stepsContainer");
+            var stepRow = document.createElement("div");
+            
             var input = document.createElement("input");
             input.type = "text";
             input.name = "steps";
@@ -154,53 +204,113 @@
 	        var deleteButton = document.createElement("button");
 	        deleteButton.type = "button";
 	        deleteButton.textContent = "Delete";
-	        // 使用匿名函数绑定点击事件，传递当前元素的引索
-	        deleteButton.onclick = function() {
-            deleteRow(this.parentNode);
-        };
+	        
+	        // 删除
+        	deleteButton.onclick = function() {
+				removeRow(stepRow,container);
+			};
         
-            container.appendChild(input);
-            container.appendChild(deleteButton);
-            container.appendChild(document.createElement("br"));
-        }
-        
-        function deleteStep(index) {
-        var container = document.getElementById("stepsContainer");
-        var rows = container.getElementsByTagName("div");
-        
-        if (index >= 0 && index <= rows.length) {
-            container.removeChild(rows[index]);
-        }
-    }
-         function addTag() {
-            var container = document.getElementById("tagsContainer");
-            var input = document.createElement("input");
-            input.type = "text";
-            input.name = "tags";
-            input.required = true;
+            stepRow.appendChild(input);
+            stepRow.appendChild(deleteButton);
+            container.appendChild(stepRow);
             
-            // 创建删除按钮
-	        var deleteButton = document.createElement("button");
-	        deleteButton.type = "button";
-	        deleteButton.textContent = "Delete";
-	        // 使用匿名函数绑定点击事件，传递当前元素（行）的引索
-	        deleteButton.onclick = function() {
-            deleteRow(this.parentNode);
-        };
-        
-            container.appendChild(input);
-            container.appendChild(deleteButton);
-            container.appendChild(document.createElement("br"));
+            updateNumberOfSteps();
         }
         
-        function deleteTag(index) {
-        var container = document.getElementById("tagsContainer");
-        var rows = container.getElementsByTagName("div");
+    
+	    function updateNumberOfSteps() {
+	    var container = document.getElementById("stepsContainer");
+	    var numberOfStepsInput = document.getElementById("numberOfStepsInput");
+	
+	    // 设置 numberOfSteps 的值为当前行数
+	    numberOfStepsInput.value = (container.getElementsByTagName("div").length);
+	}
+    
+    
+
         
-        if (index >= 0 && index <= rows.length) {
-            container.removeChild(rows[index]);
-        }
-    }
+        function getMatchingTags(keyword) {
+		    var dropdown = document.getElementById("tagDropdown");
+		
+		    // 使用Ajax向服务器请求匹配的Tag选项
+		    // 请确保你的服务器地址和端口正确
+		    fetch("/getTags?keyword=" + keyword)
+		        .then(response => response.json())
+		        .then(tags => {
+		            // 清空下拉菜单
+		            dropdown.innerHTML = "";
+		
+		            // 将匹配的Tag选项添加到下拉菜单中
+		            tags.forEach(tag => {
+		                var option = document.createElement("div");
+		                option.textContent = tag;
+		                option.onclick = function () {
+		                    selectTag(tag);
+		                };
+		                dropdown.appendChild(option);
+		            });
+		
+		            // 在下拉菜单添加完毕后，将其移动到tagsContainer的最下方
+		            moveDropdownToBottom();
+		        });
+		}
+		
+		function selectTag(tag) {
+		    var tagsContainer = document.getElementById("tagsContainer");
+		    var newTagInput = document.getElementById("newTagInput");
+		    var tagDropdown = document.getElementById("tagDropdown");
+		
+		    // 在选择标签时，将新标签添加到tagsContainer的下方
+		    var newTagDiv = document.createElement("div");
+		    newTagDiv.textContent = tag;
+		
+		    // 创建删除按钮
+		    var deleteButton = document.createElement("button");
+		    deleteButton.type = "button";
+		    deleteButton.textContent = "Delete";
+		    deleteButton.onclick = function () {
+		        removeRow(newTagDiv, tagsContainer);
+		    };
+		
+		    // 添加新标签和删除按钮
+		    newTagDiv.appendChild(deleteButton);
+		    tagsContainer.appendChild(newTagDiv);
+		
+		    // 创建隐藏的input元素
+		    var input = document.createElement("input");
+		    input.type = "text";
+		    input.name = "tags"; // 设置name属性
+		    input.value = tag;
+		    input.required = true;
+		    input.style.display = "none"; // 隐藏input元素
+		
+		    // 将隐藏的input元素添加到tagsContainer
+		    tagsContainer.appendChild(input);
+		
+		    // 将新标签输入框移动到tagsContainer的下方
+		    tagsContainer.appendChild(newTagInput);
+		
+		    // 将下拉菜单(tagDropdown)移动到tagsContainer的最下方
+		    moveDropdownToBottom();
+		
+		    // 清空下拉菜单
+		    document.getElementById("tagDropdown").innerHTML = "";
+		    // 清空输入框
+		    document.getElementById("newTagInput").value = "";
+		}
+
+		
+		function moveDropdownToBottom() {
+		    var tagsContainer = document.getElementById("tagsContainer");
+		    var tagDropdown = document.getElementById("tagDropdown");
+		
+		    // 将下拉菜单(tagDropdown)移动到tagsContainer的最下方
+		    tagsContainer.appendChild(tagDropdown);
+		    
+		    
+		}
+	
+
     
         function selectFromFile() {
             document.getElementById("pictureInput").click();

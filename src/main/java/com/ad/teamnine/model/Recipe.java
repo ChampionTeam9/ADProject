@@ -18,7 +18,7 @@ import jakarta.persistence.OneToMany;
 @Entity
 public class Recipe {
 	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) 
+    @GeneratedValue(strategy = GenerationType.AUTO) 
 	private Integer id;
 	@Column
 	private String name;

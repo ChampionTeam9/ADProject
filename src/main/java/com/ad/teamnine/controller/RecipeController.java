@@ -1,8 +1,12 @@
 package com.ad.teamnine.controller;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +26,10 @@ import com.ad.teamnine.service.RecipeService;
 @Controller
 @RequestMapping("/recipe")
 public class RecipeController {
+	
+	@Autowired
+    private RecipeService recipeService; 
+	
 	@GetMapping("/create")
     public String showAddRecipeForm(Model model) {
       
@@ -36,7 +44,8 @@ public class RecipeController {
 			@RequestParam("timeUnit") String timeUnit,
 			@RequestParam("ingredients") List<String> ingredients, 
 			@RequestParam("steps")List<String> steps,
-			@RequestParam("picture") MultipartFile pictureFile,
+			@RequestParam("image") MultipartFile pictureFile,
+			@RequestParam("tags") List<String> tags,
 			@RequestParam("status") String status,
 			Model model) {
 		
@@ -77,6 +86,7 @@ public class RecipeController {
         
         
         recipe.setStatus(Status.valueOf(status));
+        recipe.setTags(tags);
 
         
         RecipeService.createRecipe(recipe);
@@ -126,6 +136,6 @@ public class RecipeController {
 	    model.addAttribute("recipe", recipe);
 	    return "viewPage"; 
 	}
-
+	
 
 }
